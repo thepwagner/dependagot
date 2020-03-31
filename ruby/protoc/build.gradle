@@ -1,0 +1,16 @@
+task build(type: Exec, dependsOn: ':tools:protoc:build') {
+  executable "docker"
+  args "build", "-t", "${images.protoc}:ruby", "."
+
+  workingDir projectDir
+  inputs.file 'Dockerfile'
+  inputs.file 'Gemfile'
+  inputs.file 'Gemfile.lock'
+  inputs.file 'protoc.sh'
+
+  def crumb = file("${buildDir}/docker-built")
+  outputs.file crumb
+  doLast {
+    crumb.text = ''
+  }
+}

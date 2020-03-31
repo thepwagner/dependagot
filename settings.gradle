@@ -1,2 +1,5 @@
 include ':api'
+include ':ruby:common'
+include ':ruby:bundler'
+include ':ruby:protoc'
 include ':tools:protoc'

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package dependabot.v1;
+
+message FilesRequest {
+}
+message FilesResponse {
+}
+
+service UpdateService {
+  rpc Files(FilesRequest) returns (FilesResponse);
+}

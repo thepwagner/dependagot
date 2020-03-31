@@ -1,0 +1,6 @@
+task build(type: Exec) {
+  executable "gem"
+  args = ["build", "dependabot-ruby-bundler.gemspec"]
+  inputs.file "dependabot-ruby-bundler.gemspec"
+  outputs.files fileTree(dir: projectDir, include: 'dependabot-ruby-bundler-*.gem')
+}

@@ -1,0 +1,10 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    grpc-tools (1.27.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  grpc-tools
