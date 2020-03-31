@@ -1,0 +1,17 @@
+task build(type: Exec) {
+  executable "docker"
+  args "build", "-t", images.protoc, "."
+
+  workingDir projectDir
+  inputs.file 'Dockerfile'
+  inputs.file 'go.mod'
+  inputs.file 'go.sum'
+  inputs.file 'protoc.go'
+  inputs.file 'protoc.sh'
+
+  def crumb = file("${buildDir}/docker-built")
+  outputs.file crumb
+  doLast {
+    crumb.text = ''
+  }
+}
