@@ -1,5 +1,3 @@
-println images.protocRuby
-
 task build(type: Exec, dependsOn: ':tools:protoc:build') {
   executable 'docker'
   args 'build', '-t', images.protocRuby, '.'

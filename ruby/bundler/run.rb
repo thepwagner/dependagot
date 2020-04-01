@@ -1,5 +1,5 @@
 require 'grpc'
-require_relative 'service/service'
+require_relative 'lib/service'
 
 def main
   port = '0.0.0.0:9999'

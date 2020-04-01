@@ -14,14 +14,3 @@ task protoc(type: Exec, dependsOn: ':ruby:protoc:build') {
   inputs.files protos
   outputs.files fileTree(dir: projectDir, include: '**/*_pb.rb')
 }
-
-def gemOutput = "${buildDir}/dependabot-ruby-common.gem"
-
-task build(type: Exec, dependsOn: protoc) {
-  executable 'gem'
-  args = ['build', '-o', gemOutput, 'dependabot-ruby-common.gemspec']
-
-  inputs.file 'dependabot-ruby-common.gemspec'
-  inputs.dir 'lib'
-  outputs.file gemOutput
-}

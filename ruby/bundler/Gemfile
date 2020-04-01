@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
-gem "dependabot-ruby-common", path: "../common"
+gem 'dependabot-ruby-common', path: '../common'
+
+gem 'simplecov', require: false, group: :test
 
 gemspec

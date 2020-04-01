@@ -1,7 +1,36 @@
+def rubyImage = 'dependagot-ruby:latest'
+def rubyDevImage = 'dependagot-ruby-dev:latest'
+def rubyDir = project(':ruby').projectDir
+
 task build(type: Exec) {
   executable 'docker'
-  args = ['build', '.']
+  args = ['build', '-t', rubyImage, '-f', 'bundler/Dockerfile', '.']
+  workingDir rubyDir
   inputs.file 'Dockerfile'
-  inputs.file "dependabot-ruby-bundler.gemspec"
-  // outputs.files fileTree(dir: projectDir, include: 'dependabot-ruby-bundler-*.gem')
+}
+
+task buildDev(type: Exec, dependsOn: ':ruby:common:protoc') {
+  executable 'docker'
+  args = ['build', '-t', rubyDevImage, '-f', 'bundler/Dockerfile.dev', '.']
+  workingDir rubyDir
+  inputs.file 'Dockerfile.dev'
+  inputs.files fileTree(dir: rubyDir, include: '**/*.rb')
+
+  def crumb = file("${buildDir}/docker-built")
+  outputs.file crumb
+  doLast {
+    crumb.text = ''
+  }
+}
+
+task test(type: Exec, dependsOn: buildDev) {
+  executable 'docker'
+  args = [
+    'run', '--rm', '-t', '--entrypoint', 'bundle', rubyDevImage, 
+    'exec', 'rspec',
+    // rspec flags:
+    '--format', 'documentation',
+  ]
+  workingDir rubyDir
+  inputs.file 'Dockerfile.dev'
 }

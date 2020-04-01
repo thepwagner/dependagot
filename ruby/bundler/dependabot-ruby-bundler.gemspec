@@ -5,4 +5,6 @@ Gem::Specification.new do |s|
   s.files       = Dir["**/*.rb"]
   s.summary     = ''
   s.authors     = ['thepwagner@github.com']
+
+  s.add_development_dependency('rspec', ['>= 3.9.0'])
 end
