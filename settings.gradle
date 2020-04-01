@@ -1,5 +1,6 @@
 include ':api'
 include ':go:common'
+include ':go:modules'
 include ':go:protoc'
 include ':ruby:common'
 include ':ruby:bundler'

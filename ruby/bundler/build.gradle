@@ -1,5 +1,5 @@
-def rubyImage = 'dependagot-ruby:latest'
-def rubyDevImage = 'dependagot-ruby-dev:latest'
+def rubyImage = 'dependagot-ruby-bundler:latest'
+def rubyDevImage = 'dependagot-ruby-bundler-dev:latest'
 def rubyDir = project(':ruby').projectDir
 
 task build(type: Exec) {
@@ -31,6 +31,5 @@ task test(type: Exec, dependsOn: buildDev) {
     // rspec flags:
     '--format', 'documentation',
   ]
-  workingDir rubyDir
   inputs.file 'Dockerfile.dev'
 }

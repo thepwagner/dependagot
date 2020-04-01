@@ -1,0 +1,19 @@
+# Dev container holds sources and tools:
+FROM golang:1.14.1 AS dev
+
+RUN mkdir /app
+COPY common /app/common/
+
+WORKDIR /app/modules
+COPY modules/go.mod modules/go.sum /app/modules/
+RUN go mod download
+COPY modules /app/modules/
+
+# Builder assembles binary:
+FROM dev AS builder
+RUN go build -o /go-modules .
+
+# Final container is only the binary:
+FROM debian:buster-slim
+COPY --from=builder /go-modules /go-modules
+ENTRYPOINT ["/go-modules"]
