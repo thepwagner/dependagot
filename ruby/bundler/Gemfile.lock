@@ -1,0 +1,22 @@
+PATH
+  remote: ../common
+  specs:
+    dependabot-ruby-common (0.1.0)
+
+PATH
+  remote: .
+  specs:
+    dependabot-ruby-bundler (0.1.0)
+
+GEM
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  dependabot-ruby-bundler!
+  dependabot-ruby-common!
+
+BUNDLED WITH
+   2.1.2

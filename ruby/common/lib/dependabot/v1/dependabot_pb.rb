@@ -8,6 +8,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     add_message "dependabot.v1.FilesRequest" do
     end
     add_message "dependabot.v1.FilesResponse" do
+      repeated :paths, :string, 1
     end
   end
 end
