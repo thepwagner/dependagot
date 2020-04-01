@@ -4,7 +4,7 @@ import (
 	"net"
 
 	"github.com/github/dependabot/go/common/dependabot/v1"
-	"github.com/github/dependabot/go/modules/update"
+	"github.com/github/dependabot/go/modules/service"
 	"google.golang.org/grpc"
 )
 
@@ -15,8 +15,8 @@ func main() {
 	}
 
 	server := grpc.NewServer()
-	updateService := update.NewService()
-	dependabot_v1.RegisterUpdateServiceServer(server, updateService)
+	updater := service.NewUpdate()
+	dependabot_v1.RegisterUpdateServiceServer(server, updater)
 
 	if err := server.Serve(listener); err != nil && err != grpc.ErrServerStopped {
 		panic(err)

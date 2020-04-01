@@ -1,3 +1,10 @@
 ext.images = [
   protocRuby: "${images.protoc}:ruby"
 ]
+
+task build(type: Exec) {
+  executable 'docker'
+  args = ['build', '-t', 'dependagot-ruby', '.']
+  inputs.file 'Dockerfile'
+  // outputs.files fileTree(dir: projectDir, include: 'dependabot-ruby-bundler-*.gem')
+}
