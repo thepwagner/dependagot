@@ -5,6 +5,7 @@ package dependabot.v1;
 message FilesRequest {
 }
 message FilesResponse {
+  repeated string paths = 1;
 }
 
 service UpdateService {

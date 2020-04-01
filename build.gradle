@@ -1,4 +1,3 @@
 ext.images = [
   protoc: 'dependagot-protoc',
 ]
-
