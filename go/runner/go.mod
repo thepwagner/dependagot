@@ -6,5 +6,5 @@ replace github.com/github/dependabot/go/common => ../common
 
 require (
 	github.com/github/dependabot/go/common v1.0.0
-	google.golang.org/grpc v1.28.0
+	github.com/sirupsen/logrus v1.5.0
 )
