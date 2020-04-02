@@ -2,12 +2,21 @@ syntax = "proto3";
 
 package dependabot.v1;
 
+message SetupRequest {
+}
+message SetupResponse {
+  string sandbox_id = 1;
+}
+
 message FilesRequest {
+  string sandbox_id = 1;
 }
 message FilesResponse {
-  repeated string paths = 1;
+  repeated string required_paths = 1;
+  repeated string optional_paths = 2;
 }
 
 service UpdateService {
+  rpc Setup(SetupRequest) returns (SetupResponse);
   rpc Files(FilesRequest) returns (FilesResponse);
 }

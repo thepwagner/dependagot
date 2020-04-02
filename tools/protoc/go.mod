@@ -1,4 +1,4 @@
-module github.com/dependabot/update-job-runner/tools/protoc
+module github.com/thepwagner/dependagot/tools/protoc
 
 go 1.12
 
