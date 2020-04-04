@@ -7,6 +7,7 @@ task build(type: Exec, dependsOn: ':go:common:protoc') {
   args = ['build', '-t', goImage, '-f', 'modules/Dockerfile', '.']
   workingDir goDir
   inputs.file 'Dockerfile'
+  inputs.files fileTree(dir: goDir, include: '**/*.go')
 
   def crumb = file("${buildDir}/docker-built")
   outputs.file crumb

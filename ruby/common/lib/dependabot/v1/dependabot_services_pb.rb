@@ -15,7 +15,11 @@ module Dependabot
         self.unmarshal_class_method = :decode
         self.service_name = 'dependabot.v1.UpdateService'
 
+        # Files uploads data and returns a list of paths of interest
+        # Clients should loop until required_paths is empty, 
+        # and fail if required_paths can't be loaded.
         rpc :Files, FilesRequest, FilesResponse
+        rpc :ListDependencies, ListDependenciesRequest, ListDependenciesResponse
       end
 
       Stub = Service.rpc_stub_class

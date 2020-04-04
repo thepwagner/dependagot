@@ -7,7 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/github/dependabot/go/runner/runner"
+	"github.com/github/dependabot/go/cli/runner"
+	"github.com/sirupsen/logrus"
 )
 
 type File struct {
@@ -29,5 +30,9 @@ func (f *File) Load(_ context.Context, path string) ([]byte, bool, error) {
 		}
 		return nil, false, err
 	}
+	logrus.WithFields(logrus.Fields{
+		"path": p,
+		"len":  len(file),
+	}).Debug("Loaded file")
 	return file, true, err
 }

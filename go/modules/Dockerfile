@@ -15,5 +15,6 @@ RUN go build -o /go-modules .
 
 # Final container is only the binary:
 FROM debian:buster-slim
+ENV DEPENDAGOT_PORT=9999
 COPY --from=builder /go-modules /go-modules
 ENTRYPOINT ["/go-modules"]
