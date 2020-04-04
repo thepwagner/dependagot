@@ -6,10 +6,26 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/github/dependabot/go/cli/loaders"
 	"github.com/github/dependabot/go/cli/modules"
+	"github.com/github/dependabot/go/cli/runner"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
+
+func LoadingUpdaterCommand(containerCmd func(context.Context, *cobra.Command, *runner.LoadingUpdater) error) func(cmd *cobra.Command, _ []string) error {
+	return func(cmd *cobra.Command, _ []string) error {
+		ctx := context.Background()
+		container, err := moduleContainer(ctx, cmd)
+		if err != nil {
+			return err
+		}
+		defer container.Close()
+		defer dumpContainerOutput(container)
+		lu := newLoadingUpdater(container)
+		return containerCmd(ctx, cmd, lu)
+	}
+}
 
 func moduleContainer(ctx context.Context, cmd *cobra.Command) (*modules.Container, error) {
 	mod, err := cmdModule(cmd)
@@ -50,4 +66,11 @@ func dumpContainerOutput(container *modules.Container) {
 		fmt.Println(container.Output())
 		fmt.Println(strings.Repeat("-", width))
 	}
+}
+
+func newLoadingUpdater(container *modules.Container) *runner.LoadingUpdater {
+	updater := modules.NewUpdaterService(container)
+	// TODO: via cli flags, github-loader etc.
+	loader := loaders.NewFile(".")
+	return runner.NewLoadingUpdater(updater, loader)
 }

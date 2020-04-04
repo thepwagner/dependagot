@@ -1,7 +1,7 @@
 FROM golang:1.14.1
 
 RUN apt-get update \
-  && apt-get -fy install unzip ruby-bundler \
+  && apt-get -fy install unzip \
   && rm -rf /var/lib/apt/lists/*
 
 # Protoc binary:

@@ -2,6 +2,11 @@ syntax = "proto3";
 
 package dependabot.v1;
 
+message Dependency {
+  string package = 1;
+  string version = 2;
+}
+
 message FilesRequest {
   // Data for the update context, indexed by path
   map<string,bytes> files = 1;
@@ -13,12 +18,15 @@ message FilesResponse {
 }
 
 message ListDependenciesRequest {}
-message Dependency {
-  string package = 1;
-  string version = 2;
-}
 message ListDependenciesResponse {
   repeated Dependency dependencies = 1;
+}
+
+message UpdateDependenciesRequest {
+    repeated Dependency dependencies = 1;
+}
+message UpdateDependenciesResponse {
+    map<string,string> new_files = 1;
 }
 
 service UpdateService {
@@ -28,4 +36,6 @@ service UpdateService {
   rpc Files(FilesRequest) returns (FilesResponse);
 
   rpc ListDependencies(ListDependenciesRequest) returns (ListDependenciesResponse);
+
+  rpc UpdateDependencies(UpdateDependenciesRequest) returns (UpdateDependenciesResponse);
 }

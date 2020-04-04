@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/github/dependabot/go/cli/loaders"
-	"github.com/github/dependabot/go/cli/modules"
 	"github.com/github/dependabot/go/cli/runner"
 	"github.com/spf13/cobra"
 )
@@ -16,36 +14,20 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List dependencies",
 	Long:  `List dependencies`,
-	RunE:  ListCommand,
+	RunE:  LoadingUpdaterCommand(ListCommand),
 }
 
-func ListCommand(cmd *cobra.Command, _ []string) error {
-	ctx := context.Background()
-	container, err := moduleContainer(ctx, cmd)
-	if err != nil {
-		return err
-	}
-	defer container.Close()
-	defer dumpContainerOutput(container)
-	r := NewLoadingUpdater(container)
-
-	// List dependencies:
-	dependencies, err := r.ListDependencies(ctx)
+// ListCommand parses module dependencies, and renders results as JSON
+func ListCommand(ctx context.Context, _ *cobra.Command, lu *runner.LoadingUpdater) error {
+	dependencies, err := lu.ListDependencies(ctx)
 	if err != nil {
 		return err
 	}
 
-	// Render as JSON:
 	formatter := json.NewEncoder(os.Stdout)
 	formatter.SetIndent("", "  ")
 	output := map[string]interface{}{"dependencies": dependencies}
 	return formatter.Encode(output)
-}
-
-func NewLoadingUpdater(container *modules.Container) *runner.LoadingUpdater {
-	updater := modules.NewUpdaterService(container)
-	loader := loaders.NewFile(".")
-	return runner.NewLoadingUpdater(updater, loader)
 }
 
 func init() {

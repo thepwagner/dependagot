@@ -9,8 +9,8 @@ import (
 )
 
 type LoadingUpdater struct {
-	updater dependabot_v1.UpdateService
-	loader  Loader
+	Updater dependabot_v1.UpdateService
+	Loader  Loader
 }
 
 type Loader interface {
@@ -19,8 +19,8 @@ type Loader interface {
 
 func NewLoadingUpdater(updater dependabot_v1.UpdateService, loader Loader) *LoadingUpdater {
 	return &LoadingUpdater{
-		updater: updater,
-		loader:  loader,
+		Updater: updater,
+		Loader:  loader,
 	}
 }
 
@@ -28,11 +28,24 @@ func (r *LoadingUpdater) ListDependencies(ctx context.Context) ([]*dependabot_v1
 	if err := r.loadFiles(ctx); err != nil {
 		return nil, err
 	}
-	deps, err := r.updater.ListDependencies(ctx, &dependabot_v1.ListDependenciesRequest{})
+	res, err := r.Updater.ListDependencies(ctx, &dependabot_v1.ListDependenciesRequest{})
 	if err != nil {
 		return nil, err
 	}
-	return deps.Dependencies, nil
+	return res.Dependencies, nil
+}
+
+func (r *LoadingUpdater) UpdateDependencies(ctx context.Context, deps []*dependabot_v1.Dependency) (map[string]string, error) {
+	if err := r.loadFiles(ctx); err != nil {
+		return nil, err
+	}
+	res, err := r.Updater.UpdateDependencies(ctx, &dependabot_v1.UpdateDependenciesRequest{
+		Dependencies: deps,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return res.NewFiles, nil
 }
 
 func (r *LoadingUpdater) loadFiles(ctx context.Context) error {
@@ -49,16 +62,20 @@ func (r *LoadingUpdater) loadFiles(ctx context.Context) error {
 
 	var req dependabot_v1.FilesRequest
 	for {
+		reqFiles := len(req.Files)
+		var reqBytes int64
+		for _, f := range req.Files {
+			reqBytes += int64(len(f))
+		}
+		requestCount++
+		fileCount += reqFiles
+		byteCount += reqBytes
 		logrus.WithFields(logrus.Fields{
-			"included_files": len(req.Files),
+			"included_files": reqFiles,
+			"included_bytes": reqBytes,
 		}).Debug("Requesting Files()")
 
-		requestCount++
-		fileCount += len(req.Files)
-		for _, f := range req.Files {
-			byteCount += int64(len(f))
-		}
-		res, err := r.updater.Files(ctx, &req)
+		res, err := r.Updater.Files(ctx, &req)
 		if err != nil {
 			return err
 		}
@@ -93,7 +110,7 @@ func (r *LoadingUpdater) loadFiles(ctx context.Context) error {
 
 func (r *LoadingUpdater) loadPaths(ctx context.Context, paths []string, required bool, pathData map[string][]byte) error {
 	for _, path := range paths {
-		data, ok, err := r.loader.Load(ctx, path)
+		data, ok, err := r.Loader.Load(ctx, path)
 		if err != nil {
 			return fmt.Errorf("loading %q: %w", path, err)
 		}

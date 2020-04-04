@@ -17,7 +17,8 @@ func main() {
 	logrus.SetLevel(logrus.DebugLevel)
 	logrus.SetFormatter(&logrus.TextFormatter{
 		ForceColors:     true,
-		TimestampFormat: "15:04:05.999999999Z07:00",
+		FullTimestamp:   true,
+		TimestampFormat: "15:04:05.000Z07:00",
 	})
 	port := os.Getenv("DEPENDAGOT_PORT")
 	if port == "" {
@@ -31,11 +32,11 @@ func main() {
 	updater := service.NewUpdate()
 	handler := dependabot_v1.NewUpdateServiceServer(updater, &twirp.ServerHooks{
 		RequestRouted: func(ctx context.Context) (context.Context, error) {
-			twirpFields(ctx).Info("Starting API request")
+			twirpFields(ctx).Debug("Starting API request")
 			return ctx, nil
 		},
 		ResponseSent: func(ctx context.Context) {
-			twirpFields(ctx).Info("Handled API request")
+			twirpFields(ctx).Debug("Handled API request")
 		},
 	})
 
