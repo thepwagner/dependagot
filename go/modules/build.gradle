@@ -45,9 +45,3 @@ task test(type: Exec, dependsOn: buildDev) {
   ]
   inputs.file 'Dockerfile'
 }
-
-task clean {
-    doFirst {
-        buildDir.deleteDir()
-    }
-}

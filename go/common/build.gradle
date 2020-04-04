@@ -1,14 +1,14 @@
 task protoc(type: Exec, dependsOn: ':go:protoc:build') {
-  def apiDir = project(':api').projectDir.toPath()
-  def protos = fileTree(dir: apiDir, include: '**/*.proto')
+  def protoDir = project(':proto').projectDir.toPath()
+  def protos = fileTree(dir: protoDir, include: '**/*.proto')
   executable "docker"
   args = [
     "run", "--rm", "--net=none",
-    "-v", "${apiDir}:/work/src",
+    "-v", "${protoDir}:/work/src",
     "-v", "${projectDir}:/work/out",
     "-w", "/work",
     images.protocGo,
-    protos.collect { "src/${apiDir.relativize(it.toPath())}" }.join(' ')
+    protos.collect { "src/${protoDir.relativize(it.toPath())}" }.join(' ')
   ]
 
   inputs.files protos

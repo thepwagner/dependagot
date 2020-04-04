@@ -7,6 +7,13 @@ task build(type: Exec) {
   args = ['build', '-t', rubyImage, '-f', 'bundler/Dockerfile', '.']
   workingDir rubyDir
   inputs.file 'Dockerfile'
+  inputs.files fileTree(dir: rubyDir, include: '**/*.rb')
+
+  def crumb = file("${buildDir}/docker-built")
+  outputs.file crumb
+  doLast {
+    crumb.text = ''
+  }
 }
 
 task buildDev(type: Exec, dependsOn: ':ruby:common:protoc') {

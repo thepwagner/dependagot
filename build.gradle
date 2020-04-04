@@ -1,3 +1,12 @@
 ext.images = [
   protoc: 'dependagot-protoc',
 ]
+
+
+subprojects {
+    task clean {
+        doFirst {
+            buildDir.deleteDir()
+        }
+    }
+}
