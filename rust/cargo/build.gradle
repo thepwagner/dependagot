@@ -1,0 +1,27 @@
+def cargoImage = 'dependagot-rust-cargo:latest'
+def rustDir = project(':rust').projectDir
+
+task build(type: Exec) {
+  executable 'docker'
+  args = ['build', '-t', cargoImage, '-f', 'cargo/Dockerfile', '.']
+  workingDir rustDir
+  inputs.file 'Dockerfile'
+  inputs.files fileTree(dir: rustDir, include: '**/Cargo.toml')
+  inputs.files fileTree(dir: rustDir, include: '**/Cargo.lock')
+  inputs.files fileTree(dir: rustDir, include: '**/src/*.rs')
+
+  doFirst {
+    def srcDir = file("${projectDir}/src")
+    copy {
+      from project(':proto').projectDir
+      into "${project(':rust:common').projectDir}"
+      include '**/*.proto'
+    }
+  }
+
+  def crumb = file("${buildDir}/docker-built")
+  outputs.file crumb
+  doLast {
+    crumb.text = ''
+  }
+}

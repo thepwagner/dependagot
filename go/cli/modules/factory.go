@@ -56,11 +56,7 @@ func (f *Factory) NewModuleContainer(ctx context.Context, module DependencyModul
 			apiPort: []nat.PortBinding{{HostIP: "127.0.0.1", HostPort: "0"}},
 		},
 	}
-	n := network.NetworkingConfig{
-		//EndpointsConfig: map[string]*network.EndpointSettings{
-		//	"bridge": {},
-		//},
-	}
+	n := network.NetworkingConfig{}
 	create, err := f.docker.ContainerCreate(ctx, &c, &h, &n, "")
 	if err != nil {
 		return nil, fmt.Errorf("creating container: %w", err)
@@ -116,6 +112,8 @@ func moduleImage(module DependencyModule) (string, bool) {
 		return "dependagot-go-modules:latest", true
 	case RubyBundler:
 		return "dependagot-ruby-bundler:latest", true
+	case RustCargo:
+		return "dependagot-rust-cargo:latest", true
 	default:
 		return "", false
 	}

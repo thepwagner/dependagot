@@ -1,0 +1,47 @@
+def cliImage = 'dependagot-cli:latest'
+def cliDevImage = 'dependagot-go-cli-dev:latest'
+def goDir = project(':go').projectDir
+
+task build(type: Exec, dependsOn: ':go:common:protoc') {
+  executable 'docker'
+  args = ['build', '-t', cliImage, '-f', 'cli/Dockerfile', '.']
+  workingDir goDir
+  inputs.file 'Dockerfile'
+  inputs.files fileTree(dir: goDir, include: '**/*.go')
+
+  def crumb = file("${buildDir}/docker-built")
+  outputs.file crumb
+  doLast {
+    crumb.text = ''
+  }
+}
+
+task buildDev(type: Exec, dependsOn: ':go:common:protoc') {
+  executable 'docker'
+  args = ['build', '-t', cliImage,
+    '--target', 'dev',
+    '-f', 'cli/Dockerfile',
+    '.',
+  ]
+  workingDir goDir
+  inputs.file 'Dockerfile'
+  inputs.files fileTree(dir: goDir, include: '**/*.go')
+
+  def crumb = file("${buildDir}/docker-dev-built")
+  outputs.file crumb
+  doLast {
+    crumb.text = ''
+  }
+}
+
+task test(type: Exec, dependsOn: buildDev) {
+  def cacheDir = "${buildDir}/cache"
+  executable 'docker'
+  args = [
+    'run', '--rm', '-t', 
+    cliDevImage,
+    'go', 'test', 
+    '-race', '-cover', '-v', './...',
+  ]
+  inputs.file 'Dockerfile'
+}

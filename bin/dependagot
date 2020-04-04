@@ -1,0 +1,12 @@
+#!/bin/bash
+
+initial_wd="$(pwd)"
+cd "$(dirname "$0")/.."
+gradle build
+
+rel_wd=$(echo $initial_wd | sed -e "s#$(pwd)/##g")
+docker run --rm \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --net=host \
+  -v $(pwd):/work -w /work/$rel_wd \
+  dependagot-cli:latest "$@"

@@ -18,7 +18,6 @@ FROM golang:1.14.1
 RUN apt-get update \
   && apt-get -fy install git \
   && rm -rf /var/lib/apt/lists/*
-ENV PATH=/usr/bin:/usr/local/go/bin
 ENV DEPENDAGOT_PORT=9999
 COPY --from=builder /go-modules /go-modules
 ENTRYPOINT ["/go-modules"]
