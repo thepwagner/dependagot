@@ -7,5 +7,5 @@ import (
 )
 
 func NewUpdaterService(c *Container) dependabot_v1.UpdateService {
-	return dependabot_v1.NewUpdateServiceJSONClient(c.apiAddr, http.DefaultClient)
+	return dependabot_v1.NewUpdateServiceProtobufClient(c.apiAddr, http.DefaultClient)
 }

@@ -7,8 +7,12 @@ COPY common/ /src/common/
 
 WORKDIR /src/dependagot-rust-cargo
 COPY cargo/Cargo.toml cargo/Cargo.lock ./
-RUN cargo build --release
+RUN mkdir .cargo
+RUN cargo vendor > .cargo/config
 
 COPY cargo/src ./src
-RUN cargo install
-ENTRYPOINT ["/usr/local/bin/dependagot-rust-cargo"]
+RUN cargo build --release
+
+FROM debian:buster-slim
+COPY --from=dev /src/dependagot-rust-cargo/target/release/dependagot-rust-cargo /dependagot-rust-cargo
+ENTRYPOINT ["/dependagot-rust-cargo"]
