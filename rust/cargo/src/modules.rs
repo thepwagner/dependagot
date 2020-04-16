@@ -12,7 +12,6 @@ pub mod state {
 }
 
 pub mod filters {
-    // use super::handlers;
     use super::state::Files;
     use crate::handlers;
     use std::convert::Infallible;
@@ -66,10 +65,6 @@ mod handlers {
     use super::state::Files;
     use cargo_toml::Manifest;
     use dependagot_common;
-    use std::collections::HashMap;
-    use std::convert::Infallible;
-    use std::str;
-    use warp::Reply;
 
     pub async fn list_dependencies(
         _req: dependagot_common::ListDependenciesRequest,

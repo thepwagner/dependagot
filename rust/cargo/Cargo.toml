@@ -19,3 +19,4 @@ tempdir = "0.3.7"
 cargo_toml = "0.8.0"
 cargo = "0.43.1"
 anyhow = "1.0.28"
+toml = { version = "0.5.3", features = ["preserve_order"] }

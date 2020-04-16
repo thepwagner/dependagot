@@ -1,18 +1,18 @@
 use crate::modules::state::Files;
+use cargo::core::Workspace;
+use cargo::util::Config;
 use std::collections::HashMap;
 use std::fs::{create_dir, read_to_string, File};
 use std::io::{self, Write};
 use tempdir::TempDir;
-
-use cargo::core::Workspace;
-use cargo::util::Config;
+use toml::Value;
 
 pub async fn update_dependencies(
-    _req: dependagot_common::UpdateDependenciesRequest,
+    req: dependagot_common::UpdateDependenciesRequest,
     files: Files,
 ) -> Result<impl warp::Reply, warp::Rejection> {
     // Write files out to a temporary directory:
-    let sandbox = match setup_sandbox(files).await {
+    let (sandbox, old_versions) = match setup_sandbox(files, req.dependencies).await {
         Err(e) => {
             error!("error creating sandbox: {:?}", e);
             // TODO: custom error
@@ -20,7 +20,7 @@ pub async fn update_dependencies(
         }
         Ok(s) => s,
     };
-    info!("sandbox: {}", sandbox.path().to_str().unwrap());
+    info!("completed sandbox: {}", sandbox.path().to_str().unwrap());
 
     // Parse files into a cargo workspace:
     let config = match Config::default() {
@@ -40,14 +40,15 @@ pub async fn update_dependencies(
         Ok(s) => s,
     };
 
+    // Request cargo update the Cargo.lock file:
     let res = match cargo::ops::update_lockfile(
         &ws,
         &cargo::ops::UpdateOptions {
             config: &config,
             aggressive: false,
             dry_run: false,
-            precise: Some("0.6.0"),
-            to_update: vec!["prost:0.6.1".to_string()],
+            precise: None,
+            to_update: old_versions,
         },
     ) {
         Err(e) => {
@@ -57,8 +58,8 @@ pub async fn update_dependencies(
         }
         Ok(s) => s,
     };
-    info!("res: {:?}", res);
 
+    // Read and return the updated files from sandbox:
     let new_files = match read_new_files(sandbox) {
         Err(e) => {
             error!("error reading new files: {:?}", e);
@@ -72,7 +73,10 @@ pub async fn update_dependencies(
     Ok(warp_protobuf::reply::protobuf(&res))
 }
 
-async fn setup_sandbox(files: Files) -> Result<TempDir, io::Error> {
+async fn setup_sandbox(
+    files: Files,
+    dependencies: Vec<dependagot_common::Dependency>,
+) -> Result<(TempDir,Vec<String>), io::Error> {
     // Directory to host project:
     let tmp_dir = TempDir::new("dependagot")?;
     debug!("created: {}", tmp_dir.path().to_str().unwrap());
@@ -84,15 +88,53 @@ async fn setup_sandbox(files: Files) -> Result<TempDir, io::Error> {
 
     // TODO: if files contains relative paths
 
-    // Write out files:
+    // Write out files, excluding Cargo.toml:
     let files = files.lock().await;
     for (name, data) in files.iter() {
+        if name == "Cargo.toml" {
+            continue;
+        }
         let file_path = tmp_dir.path().join(name);
         let mut tmp_file = File::create(&file_path)?;
         tmp_file.write_all(data.as_bytes())?;
         debug!("created: {}", file_path.to_str().unwrap());
     }
-    Ok(tmp_dir)
+
+    // Index upgrade targets:
+    let targets: HashMap<String, String> = dependencies
+        .into_iter()
+        .map(|dep| (dep.package, dep.version))
+        .collect();
+
+    // Iterate the [dependencies] section, replacing any requesting updates:
+    let mut new_dependencies = toml::map::Map::new();
+    let mut old_versions = vec![];
+    let mut cargo_toml = files.get("Cargo.toml").unwrap().parse::<Value>().unwrap();
+    let dependencies = cargo_toml["dependencies"].as_table().unwrap();
+    for (dep, req) in dependencies.iter() {
+        let value: Value = match targets.get(dep) {
+            Some(target) => {
+                let old_version = req.as_str().unwrap();
+                info!(
+                    "updating dependency {}: {} -> {}",
+                    dep,
+                    old_version,
+                    target
+                );
+                old_versions.push(format!("{}:{}", dep,old_version));
+                Value::String(target.to_string())
+            }
+            None => Value::String(req.as_str().unwrap().to_string()),
+        };
+        new_dependencies.insert(dep.to_string(), value);
+    }
+    cargo_toml["dependencies"] = Value::Table(new_dependencies);
+
+    // Write the edited Cargo.toml:
+    let mut cargo_toml_out = File::create(&tmp_dir.path().join("Cargo.toml"))?;
+    cargo_toml_out.write_all(toml::to_string(&cargo_toml).unwrap().as_bytes())?;
+
+    Ok((tmp_dir, old_versions))
 }
 
 fn read_new_files(sandbox: TempDir) -> Result<HashMap<String, String>, io::Error> {
