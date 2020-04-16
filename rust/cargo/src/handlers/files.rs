@@ -2,6 +2,7 @@ use crate::modules::state::Files;
 use dependagot_common;
 use std::str;
 
+/// Files()
 pub async fn files(
     req: dependagot_common::FilesRequest,
     files: Files,

@@ -13,33 +13,36 @@ pub mod state {
 
 pub mod filters {
     // use super::handlers;
-    use crate::handlers;
     use super::state::Files;
+    use crate::handlers;
     use std::convert::Infallible;
     use warp::{Filter, Rejection, Reply};
 
     pub fn new(state: Files) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-        files(state.clone())
-            // .or(list_dependencies(state.clone()))
-            // .or(update_dependencies(state))
-    }
-
-    fn files(state: Files) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-        warp::path!("twirp" / "dependabot.v1.UpdateService" / "Files")
-            .and(warp::post())
-            .and(warp_protobuf::body::protobuf())
-            .and(with_files(state))
-            .and_then(handlers::files)
+        warp::path::end()
+            .map(handlers::index)
+            .or(
+                warp::path!("twirp" / "dependabot.v1.UpdateService" / "Files")
+                    .and(warp::post())
+                    .and(warp_protobuf::body::protobuf())
+                    .and(with_files(state.clone()))
+                    .and_then(handlers::files),
+            )
+            .or(
+                warp::path!("twirp" / "dependabot.v1.UpdateService" / "UpdateDependencies")
+                    .and(warp::post())
+                    .and(warp_protobuf::body::protobuf())
+                    .and(with_files(state))
+                    .and_then(handlers::update_dependencies),
+            )
+        // .or(list_dependencies(state.clone()))
+        // .or(update_dependencies(state))
     }
 
     // fn list_dependencies(
     //     state: Files,
     // ) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-    //     warp::path!("twirp" / "dependabot.v1.UpdateService" / "ListDependencies")
-    //         .and(warp::post())
-    //         .and(warp_protobuf::body::protobuf())
-    //         .and(with_files(state))
-    //         .and_then(handlers::list_dependencies)
+
     // }
 
     // fn update_dependencies(
@@ -93,17 +96,5 @@ mod handlers {
             // TODO: invalid state error
             Err(warp::reject::not_found())
         }
-    }
-
-    pub async fn update_dependencies(
-        _req: dependagot_common::UpdateDependenciesRequest,
-        files: Files,
-    ) -> Result<impl warp::Reply, warp::Rejection> {
-        let files = files.lock().await;
-
-        let new_files = HashMap::new();
-
-        let res = dependagot_common::UpdateDependenciesResponse { new_files };
-        Ok(warp_protobuf::reply::protobuf(&res))
     }
 }

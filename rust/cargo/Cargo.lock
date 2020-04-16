@@ -248,6 +248,7 @@ dependencies = [
  "prost 0.6.1",
  "serde",
  "serde_derive",
+ "tempdir",
  "tokio 0.2.16",
  "warp",
  "warp-protobuf",
