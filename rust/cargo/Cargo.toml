@@ -14,9 +14,6 @@ tokio = { version = "0.2", features = ["macros"] }
 warp = "0.2"
 warp-protobuf = "0.1.0"
 tempdir = "0.3.7"
-
-# TODO: can this be replaced?
-cargo_toml = "0.8.0"
 cargo = "0.43.1"
 anyhow = "1.0.28"
 toml = { version = "0.5.3", features = ["preserve_order"] }

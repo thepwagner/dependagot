@@ -257,17 +257,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cargo_toml"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e7877b00aaf997d7ed66a81281d3a8b9f9da5361df05b72785b985349979a0f3"
-dependencies = [
- "serde",
- "serde_derive",
- "toml",
-]
-
-[[package]]
 name = "cc"
 version = "1.0.50"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -481,7 +470,6 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "cargo",
- "cargo_toml",
  "dependagot-common",
  "env_logger 0.7.1",
  "log 0.4.8",
