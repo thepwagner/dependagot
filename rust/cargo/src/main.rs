@@ -6,6 +6,7 @@ extern crate log;
 use std::env;
 use warp::Filter;
 
+mod handlers;
 mod modules;
 
 #[tokio::main]

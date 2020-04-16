@@ -12,15 +12,16 @@ pub mod state {
 }
 
 pub mod filters {
-    use super::handlers;
+    // use super::handlers;
+    use crate::handlers;
     use super::state::Files;
     use std::convert::Infallible;
     use warp::{Filter, Rejection, Reply};
 
     pub fn new(state: Files) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
         files(state.clone())
-            .or(list_dependencies(state.clone()))
-            .or(update_dependencies(state))
+            // .or(list_dependencies(state.clone()))
+            // .or(update_dependencies(state))
     }
 
     fn files(state: Files) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
@@ -31,25 +32,25 @@ pub mod filters {
             .and_then(handlers::files)
     }
 
-    fn list_dependencies(
-        state: Files,
-    ) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-        warp::path!("twirp" / "dependabot.v1.UpdateService" / "ListDependencies")
-            .and(warp::post())
-            .and(warp_protobuf::body::protobuf())
-            .and(with_files(state))
-            .and_then(handlers::list_dependencies)
-    }
+    // fn list_dependencies(
+    //     state: Files,
+    // ) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+    //     warp::path!("twirp" / "dependabot.v1.UpdateService" / "ListDependencies")
+    //         .and(warp::post())
+    //         .and(warp_protobuf::body::protobuf())
+    //         .and(with_files(state))
+    //         .and_then(handlers::list_dependencies)
+    // }
 
-    fn update_dependencies(
-        state: Files,
-    ) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-        warp::path!("twirp" / "dependabot.v1.UpdateService" / "UpdateDependencies")
-            .and(warp::post())
-            .and(warp_protobuf::body::protobuf())
-            .and(with_files(state))
-            .and_then(handlers::update_dependencies)
-    }
+    // fn update_dependencies(
+    //     state: Files,
+    // ) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+    //     warp::path!("twirp" / "dependabot.v1.UpdateService" / "UpdateDependencies")
+    //         .and(warp::post())
+    //         .and(warp_protobuf::body::protobuf())
+    //         .and(with_files(state))
+    //         .and_then(handlers::update_dependencies)
+    // }
 
     fn with_files(files: Files) -> impl Filter<Extract = (Files,), Error = Infallible> + Clone {
         warp::any().map(move || files.clone())
@@ -66,35 +67,6 @@ mod handlers {
     use std::convert::Infallible;
     use std::str;
     use warp::Reply;
-
-    pub async fn files(
-        req: dependagot_common::FilesRequest,
-        files: Files,
-    ) -> Result<impl Reply, Infallible> {
-        let mut files = files.lock().await;
-        for (k, v) in req.files.iter() {
-            if k.as_str() == "Cargo.toml" || k.as_str() == "Cargo.lock" {
-                files.insert(k.to_string(), str::from_utf8(&v).unwrap().to_string());
-            }
-        }
-
-        // TODO: if Cargo.toml has been uploaded, parse for relative paths
-
-        let mut required_paths = vec![];
-        if !files.contains_key("Cargo.toml") {
-            required_paths.push("Cargo.toml".to_string());
-        }
-
-        let mut optional_paths = vec![];
-        if !files.contains_key("Cargo.lock") {
-            optional_paths.push("Cargo.lock".to_string());
-        }
-        let res = dependagot_common::FilesResponse {
-            required_paths,
-            optional_paths,
-        };
-        Ok(warp_protobuf::reply::protobuf(&res))
-    }
 
     pub async fn list_dependencies(
         _req: dependagot_common::ListDependenciesRequest,
