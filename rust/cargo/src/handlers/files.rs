@@ -1,13 +1,13 @@
-use crate::modules::state::Files;
+use crate::state::State;
 use dependagot_common;
 use std::str;
 
 /// Files()
 pub async fn files(
     req: dependagot_common::FilesRequest,
-    files: Files,
+    state: State,
 ) -> Result<impl warp::Reply, std::convert::Infallible> {
-    let mut files = files.lock().await;
+    let mut files = state.files.lock().await;
     for (k, v) in req.files.iter() {
         if k.as_str() == "Cargo.toml" || k.as_str() == "Cargo.lock" {
             files.insert(k.to_string(), str::from_utf8(&v).unwrap().to_string());

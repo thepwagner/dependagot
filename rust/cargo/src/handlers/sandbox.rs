@@ -1,4 +1,4 @@
-use crate::modules::state::Files;
+use crate::state::State;
 use std::collections::HashMap;
 use std::fs::{create_dir, read_to_string, File};
 use std::io::{self, Write};
@@ -6,7 +6,7 @@ use tempdir::TempDir;
 use toml::Value;
 
 pub async fn setup_sandbox(
-    files: Files,
+    state: State,
     dependencies: Vec<dependagot_common::Dependency>,
 ) -> Result<(TempDir, Vec<String>), io::Error> {
     // Directory to host project:
@@ -21,7 +21,7 @@ pub async fn setup_sandbox(
     // TODO: if files contains relative paths
 
     // Write out files, excluding Cargo.toml:
-    let files = files.lock().await;
+    let files = state.files.lock().await;
     for (name, data) in files.iter() {
         if name == "Cargo.toml" {
             continue;

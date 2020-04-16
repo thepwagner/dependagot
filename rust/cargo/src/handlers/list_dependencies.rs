@@ -1,14 +1,14 @@
 use crate::handlers::sandbox::setup_sandbox;
-use crate::modules::state::Files;
+use crate::state::State;
 use cargo::core::Workspace;
 use cargo::util::Config;
 
 /// ListDependencies()
 pub async fn list_dependencies(
     _req: dependagot_common::ListDependenciesRequest,
-    files: Files,
+    state: State,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    let (sandbox, _) = match setup_sandbox(files, vec![]).await {
+    let (sandbox, _) = match setup_sandbox(state, vec![]).await {
         Err(e) => {
             error!("error creating sandbox: {:?}", e);
             // TODO: custom error

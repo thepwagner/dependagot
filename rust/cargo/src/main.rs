@@ -7,7 +7,8 @@ use std::env;
 use warp::Filter;
 
 mod handlers;
-mod modules;
+mod routes;
+mod state;
 
 #[tokio::main]
 async fn main() {
@@ -16,12 +17,11 @@ async fn main() {
     }
     env_logger::init();
 
-    let files = modules::state::empty_files();
-    let api = modules::filters::new(files);
+    let state = state::State::new();
 
     // TODO: from env
     let port = 9999;
-    let routes = api.with(warp::log("dependagot"));
+    let routes = routes::new(state).with(warp::log("dependagot"));
     info!("starting server 0.0.0.0:{}", port);
     warp::serve(routes).run(([0, 0, 0, 0], port)).await;
 }

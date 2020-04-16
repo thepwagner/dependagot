@@ -1,7 +1,7 @@
 mod files;
 mod list_dependencies;
-mod update_dependencies;
 mod sandbox;
+mod update_dependencies;
 
 pub use files::files;
 pub use list_dependencies::list_dependencies;

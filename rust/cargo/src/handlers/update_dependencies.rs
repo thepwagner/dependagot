@@ -1,14 +1,14 @@
 use crate::handlers::sandbox::{read_sandbox, setup_sandbox};
-use crate::modules::state::Files;
+use crate::state::State;
 use cargo::core::Workspace;
 use cargo::util::Config;
 
 pub async fn update_dependencies(
     req: dependagot_common::UpdateDependenciesRequest,
-    files: Files,
+    state: State,
 ) -> Result<impl warp::Reply, warp::Rejection> {
     // Write files out to a temporary directory:
-    let (sandbox, old_versions) = match setup_sandbox(files, req.dependencies).await {
+    let (sandbox, old_versions) = match setup_sandbox(state, req.dependencies).await {
         Err(e) => {
             error!("error creating sandbox: {:?}", e);
             // TODO: custom error
