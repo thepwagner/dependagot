@@ -5,6 +5,10 @@ require 'google/protobuf'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_file("dependabot/v1/dependabot.proto", :syntax => :proto3) do
+    add_message "dependabot.v1.Dependency" do
+      optional :package, :string, 1
+      optional :version, :string, 2
+    end
     add_message "dependabot.v1.FilesRequest" do
       map :files, :string, :bytes, 1
     end
@@ -14,22 +18,26 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     end
     add_message "dependabot.v1.ListDependenciesRequest" do
     end
-    add_message "dependabot.v1.Dependency" do
-      optional :package, :string, 1
-      optional :version, :string, 2
-    end
     add_message "dependabot.v1.ListDependenciesResponse" do
       repeated :dependencies, :message, 1, "dependabot.v1.Dependency"
+    end
+    add_message "dependabot.v1.UpdateDependenciesRequest" do
+      repeated :dependencies, :message, 1, "dependabot.v1.Dependency"
+    end
+    add_message "dependabot.v1.UpdateDependenciesResponse" do
+      map :new_files, :string, :string, 1
     end
   end
 end
 
 module Dependabot
   module V1
-    FilesRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("dependabot.v1.FilesRequest").msgclass
-    FilesResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("dependabot.v1.FilesResponse").msgclass
-    ListDependenciesRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("dependabot.v1.ListDependenciesRequest").msgclass
-    Dependency = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("dependabot.v1.Dependency").msgclass
-    ListDependenciesResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("dependabot.v1.ListDependenciesResponse").msgclass
+    Dependency = Google::Protobuf::DescriptorPool.generated_pool.lookup("dependabot.v1.Dependency").msgclass
+    FilesRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("dependabot.v1.FilesRequest").msgclass
+    FilesResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("dependabot.v1.FilesResponse").msgclass
+    ListDependenciesRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("dependabot.v1.ListDependenciesRequest").msgclass
+    ListDependenciesResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("dependabot.v1.ListDependenciesResponse").msgclass
+    UpdateDependenciesRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("dependabot.v1.UpdateDependenciesRequest").msgclass
+    UpdateDependenciesResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("dependabot.v1.UpdateDependenciesResponse").msgclass
   end
 end

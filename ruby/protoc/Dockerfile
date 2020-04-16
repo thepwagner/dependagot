@@ -1,11 +1,10 @@
 FROM dependagot-protoc
 
-RUN apt-get update \
-  && apt-get -y install ruby-bundler \
-  && rm -rf /var/lib/apt/lists/*
-
-COPY Gemfile Gemfile.lock /app/
-RUN bundle install
+RUN mkdir /protoc-ruby
+WORKDIR /protoc-ruby
+COPY go.mod go.sum /protoc-ruby/
+RUN go mod download
+RUN go install github.com/twitchtv/twirp-ruby/protoc-gen-twirp_ruby
 
 COPY protoc.sh /protoc.sh
 ENTRYPOINT ["/protoc.sh"]

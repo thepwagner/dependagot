@@ -8,5 +8,5 @@ Gem::Specification.new do |s|
   s.files       = Dir["**/*.rb"]
   s.require_paths = ["lib"]
 
-  s.add_dependency 'grpc', '~> 1.0'
+  s.add_dependency 'twirp', '~> 1.4'
 end

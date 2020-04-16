@@ -3,8 +3,8 @@
 chmod 755 /go/bin /go
 
 for PROTO in "$@"; do
-  grpc_tools_ruby_protoc $PROTO \
+  protoc $PROTO \
     -I src \
     --ruby_out=out/lib \
-    --grpc_out=out/lib
+    --twirp_ruby_out=out/lib
 done

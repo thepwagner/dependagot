@@ -1,7 +1,5 @@
 #!/bin/sh
 
-#!/bin/sh
-
 OUT=out
 for PROTO in "$@"; do
   protoc $PROTO \

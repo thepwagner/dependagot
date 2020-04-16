@@ -1,12 +1,15 @@
-require 'grpc'
+require 'rack'
+require 'webrick'
+
 require_relative 'lib/service'
 
 def main
-  port = '0.0.0.0:9999'
-  s = GRPC::RpcServer.new
-  s.add_http2_port(port, :this_port_is_insecure)
-  s.handle(Updater.new)
-  s.run_till_terminated_or_interrupted([1, 'int', 'SIGQUIT'])
+  handler = UpdateServiceHandler.new
+  service = ::Dependabot::V1::UpdateServiceService.new(handler)
+  path_prefix = "/twirp/" + service.full_name
+  server = WEBrick::HTTPServer.new(BindAddress: "0.0.0.0", Port: 9999)
+  server.mount path_prefix, Rack::Handler::WEBrick, service
+  server.start
 end
 
 main
