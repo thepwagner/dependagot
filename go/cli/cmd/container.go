@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/github/dependabot/go/cli/loaders"
 	"github.com/github/dependabot/go/cli/modules"
@@ -22,6 +23,7 @@ func LoadingUpdaterCommand(containerCmd func(context.Context, *cobra.Command, *r
 		}
 		defer container.Close()
 		defer dumpContainerOutput(container)
+		time.Sleep(100 * time.Millisecond)
 		lu := newLoadingUpdater(container)
 		return containerCmd(ctx, cmd, lu)
 	}

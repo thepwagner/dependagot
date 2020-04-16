@@ -18,9 +18,10 @@ async fn main() {
     env_logger::init();
 
     let state = state::State::new();
-
-    // TODO: from env
-    let port = 9999;
+    let port: u16 = match env::var_os("DEPENDAGOT_PORT") {
+        None => 9999,
+        Some(port) => port.into_string().unwrap().parse::<u16>().unwrap(),
+    };
     let routes = routes::new(state).with(warp::log("dependagot"));
     info!("starting server 0.0.0.0:{}", port);
     warp::serve(routes).run(([0, 0, 0, 0], port)).await;
