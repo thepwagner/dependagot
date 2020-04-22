@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/github/dependabot/go/common/dependabot/v1"
 	"github.com/sirupsen/logrus"
+	"github.com/thepwagner/dependagot/go/common/dependagot/v1"
 )
 
 type LoadingUpdater struct {
-	Updater dependabot_v1.UpdateService
+	Updater dependagot_v1.UpdateService
 	Loader  Loader
 }
 
@@ -17,29 +17,29 @@ type Loader interface {
 	Load(ctx context.Context, path string) ([]byte, bool, error)
 }
 
-func NewLoadingUpdater(updater dependabot_v1.UpdateService, loader Loader) *LoadingUpdater {
+func NewLoadingUpdater(updater dependagot_v1.UpdateService, loader Loader) *LoadingUpdater {
 	return &LoadingUpdater{
 		Updater: updater,
 		Loader:  loader,
 	}
 }
 
-func (r *LoadingUpdater) ListDependencies(ctx context.Context) ([]*dependabot_v1.Dependency, error) {
+func (r *LoadingUpdater) ListDependencies(ctx context.Context) ([]*dependagot_v1.Dependency, error) {
 	if err := r.loadFiles(ctx); err != nil {
 		return nil, err
 	}
-	res, err := r.Updater.ListDependencies(ctx, &dependabot_v1.ListDependenciesRequest{})
+	res, err := r.Updater.ListDependencies(ctx, &dependagot_v1.ListDependenciesRequest{})
 	if err != nil {
 		return nil, err
 	}
 	return res.Dependencies, nil
 }
 
-func (r *LoadingUpdater) UpdateDependencies(ctx context.Context, deps []*dependabot_v1.Dependency) (map[string]string, error) {
+func (r *LoadingUpdater) UpdateDependencies(ctx context.Context, deps []*dependagot_v1.Dependency) (map[string]string, error) {
 	if err := r.loadFiles(ctx); err != nil {
 		return nil, err
 	}
-	res, err := r.Updater.UpdateDependencies(ctx, &dependabot_v1.UpdateDependenciesRequest{
+	res, err := r.Updater.UpdateDependencies(ctx, &dependagot_v1.UpdateDependenciesRequest{
 		Dependencies: deps,
 	})
 	if err != nil {
@@ -60,7 +60,7 @@ func (r *LoadingUpdater) loadFiles(ctx context.Context) error {
 		}).Info("Finished file loading")
 	}()
 
-	var req dependabot_v1.FilesRequest
+	var req dependagot_v1.FilesRequest
 	for {
 		reqFiles := len(req.Files)
 		var reqBytes int64

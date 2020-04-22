@@ -3,15 +3,15 @@ package service
 import (
 	"context"
 
-	dependabot_v1 "github.com/github/dependabot/go/common/dependabot/v1"
-	"github.com/github/dependabot/go/modules/modules"
+	"github.com/thepwagner/dependagot/go/common/dependagot/v1"
+	"github.com/thepwagner/dependagot/go/modules/modules"
 )
 
 type Update struct {
 	modules *modules.Modules
 }
 
-var _ dependabot_v1.UpdateService = (*Update)(nil)
+var _ dependagot_v1.UpdateService = (*Update)(nil)
 
 func NewUpdate() *Update {
 	return &Update{
@@ -19,7 +19,7 @@ func NewUpdate() *Update {
 	}
 }
 
-func (s *Update) ListDependencies(_ context.Context, _ *dependabot_v1.ListDependenciesRequest) (*dependabot_v1.ListDependenciesResponse, error) {
+func (s *Update) ListDependencies(_ context.Context, _ *dependagot_v1.ListDependenciesRequest) (*dependagot_v1.ListDependenciesResponse, error) {
 	if twirpErr := s.ensureModules(); twirpErr != nil {
 		return nil, twirpErr
 	}
@@ -28,12 +28,12 @@ func (s *Update) ListDependencies(_ context.Context, _ *dependabot_v1.ListDepend
 	if err != nil {
 		return nil, err
 	}
-	return &dependabot_v1.ListDependenciesResponse{
+	return &dependagot_v1.ListDependenciesResponse{
 		Dependencies: deps,
 	}, nil
 }
 
-func (s *Update) UpdateDependencies(_ context.Context, req *dependabot_v1.UpdateDependenciesRequest) (*dependabot_v1.UpdateDependenciesResponse, error) {
+func (s *Update) UpdateDependencies(_ context.Context, req *dependagot_v1.UpdateDependenciesRequest) (*dependagot_v1.UpdateDependenciesResponse, error) {
 	if twirpErr := s.ensureModules(); twirpErr != nil {
 		return nil, twirpErr
 	}
@@ -42,7 +42,7 @@ func (s *Update) UpdateDependencies(_ context.Context, req *dependabot_v1.Update
 	if err != nil {
 		return nil, err
 	}
-	return &dependabot_v1.UpdateDependenciesResponse{
+	return &dependagot_v1.UpdateDependenciesResponse{
 		NewFiles: files,
 	}, nil
 }

@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/dependabot/gomodules-extracted/cmd/go/_internal_/modfile"
-	"github.com/github/dependabot/go/common/dependabot/v1"
 	"github.com/sirupsen/logrus"
+	"github.com/thepwagner/dependagot/go/common/dependagot/v1"
 )
 
 const (
@@ -36,16 +36,16 @@ func NewModules(gomod, gosum string, paths map[string]string) *Modules {
 	}
 }
 
-func (s *Modules) Dependencies() ([]*dependabot_v1.Dependency, error) {
+func (s *Modules) Dependencies() ([]*dependagot_v1.Dependency, error) {
 	mod, err := s.parsedModFile()
 	if err != nil {
 		return nil, err
 	}
 
 	// TODO: what about replacements?
-	deps := make([]*dependabot_v1.Dependency, 0, len(mod.Require))
+	deps := make([]*dependagot_v1.Dependency, 0, len(mod.Require))
 	for _, r := range mod.Require {
-		deps = append(deps, &dependabot_v1.Dependency{
+		deps = append(deps, &dependagot_v1.Dependency{
 			Package: r.Mod.Path,
 			Version: r.Mod.Version,
 		})
@@ -73,11 +73,11 @@ func (s *Modules) AdditionalPaths() ([]string, error) {
 	return res, nil
 }
 
-func (s *Modules) DependencyVersion(dep *dependabot_v1.Dependency) (map[string]string, error) {
+func (s *Modules) DependencyVersion(dep *dependagot_v1.Dependency) (map[string]string, error) {
 	return nil, nil
 }
 
-func (s *Modules) UpdateDependencies(deps []*dependabot_v1.Dependency) (map[string]string, error) {
+func (s *Modules) UpdateDependencies(deps []*dependagot_v1.Dependency) (map[string]string, error) {
 	mod, err := s.parsedModFile()
 	if err != nil {
 		return nil, err

@@ -1,12 +1,12 @@
-module github.com/github/dependabot/go/modules
+module github.com/thepwagner/dependagot/go/modules
 
 go 1.14
 
-replace github.com/github/dependabot/go/common => ../common
+replace github.com/thepwagner/dependagot/go/common => ../common
 
 require (
 	github.com/dependabot/gomodules-extracted v1.1.0
-	github.com/github/dependabot/go/common v1.0.0
+	github.com/thepwagner/dependagot/go/common v1.0.0
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/sirupsen/logrus v1.5.0
 	github.com/stretchr/testify v1.5.1

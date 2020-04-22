@@ -5,10 +5,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/github/dependabot/go/cli/diff"
-	"github.com/github/dependabot/go/cli/runner"
-	dependabot_v1 "github.com/github/dependabot/go/common/dependabot/v1"
 	"github.com/spf13/cobra"
+	"github.com/thepwagner/dependagot/go/cli/diff"
+	"github.com/thepwagner/dependagot/go/cli/runner"
+	"github.com/thepwagner/dependagot/go/common/dependagot/v1"
 )
 
 // upgradeCmd represents the upgrade command
@@ -42,9 +42,9 @@ func Upgrade(ctx context.Context, cmd *cobra.Command, lu *runner.LoadingUpdater)
 		return fmt.Errorf("mismatch: %d packages, %d versions", len(p), len(v))
 	}
 
-	deps := make([]*dependabot_v1.Dependency, 0, len(p))
+	deps := make([]*dependagot_v1.Dependency, 0, len(p))
 	for i, depPackage := range p {
-		deps = append(deps, &dependabot_v1.Dependency{
+		deps = append(deps, &dependagot_v1.Dependency{
 			Package: depPackage,
 			Version: v[i],
 		})

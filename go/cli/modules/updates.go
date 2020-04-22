@@ -3,9 +3,9 @@ package modules
 import (
 	"net/http"
 
-	"github.com/github/dependabot/go/common/dependabot/v1"
+	"github.com/thepwagner/dependagot/go/common/dependagot/v1"
 )
 
-func NewUpdaterService(c *Container) dependabot_v1.UpdateService {
-	return dependabot_v1.NewUpdateServiceProtobufClient(c.apiAddr, http.DefaultClient)
+func NewUpdaterService(c *Container) dependagot_v1.UpdateService {
+	return dependagot_v1.NewUpdateServiceProtobufClient(c.apiAddr, http.DefaultClient)
 }

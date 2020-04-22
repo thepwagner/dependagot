@@ -3,7 +3,7 @@ package loaders
 import (
 	"context"
 
-	"github.com/github/dependabot/go/cli/runner"
+	"github.com/thepwagner/dependagot/go/cli/runner"
 )
 
 type Memory struct {

@@ -3,12 +3,12 @@ package service
 import (
 	"context"
 
-	dependabot_v1 "github.com/github/dependabot/go/common/dependabot/v1"
-	"github.com/github/dependabot/go/modules/modules"
+	"github.com/thepwagner/dependagot/go/common/dependagot/v1"
+	"github.com/thepwagner/dependagot/go/modules/modules"
 	"github.com/twitchtv/twirp"
 )
 
-func (s *Update) Files(_ context.Context, req *dependabot_v1.FilesRequest) (*dependabot_v1.FilesResponse, error) {
+func (s *Update) Files(_ context.Context, req *dependagot_v1.FilesRequest) (*dependagot_v1.FilesResponse, error) {
 	// Update incoming files:
 	for path, data := range req.GetFiles() {
 		switch path {
@@ -21,7 +21,7 @@ func (s *Update) Files(_ context.Context, req *dependabot_v1.FilesRequest) (*dep
 		}
 	}
 
-	var res dependabot_v1.FilesResponse
+	var res dependagot_v1.FilesResponse
 
 	// If go.mod hasn't been provided, it's required:
 	if len(s.modules.GoMod) == 0 {

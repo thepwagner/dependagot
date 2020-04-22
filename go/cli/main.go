@@ -1,6 +1,6 @@
 package main
 
-import "github.com/github/dependabot/go/cli/cmd"
+import "github.com/thepwagner/dependagot/go/cli/cmd"
 
 func main() {
 	cmd.Execute()

@@ -6,11 +6,13 @@ import (
 	"time"
 
 	"github.com/docker/docker/client"
-	"github.com/github/dependabot/go/cli/modules"
 	"github.com/stretchr/testify/require"
+	"github.com/thepwagner/dependagot/go/cli/modules"
 )
 
 func TestNewFactory(t *testing.T) {
+	t.Skip("docker")
+
 	docker, err := client.NewEnvClient()
 	require.NoError(t, err)
 

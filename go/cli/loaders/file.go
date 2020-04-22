@@ -7,8 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/github/dependabot/go/cli/runner"
 	"github.com/sirupsen/logrus"
+	"github.com/thepwagner/dependagot/go/cli/runner"
 )
 
 type File struct {

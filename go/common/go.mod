@@ -1,4 +1,4 @@
-module github.com/github/dependabot/go/common
+module github.com/thepwagner/dependagot/go/common
 
 go 1.14
 

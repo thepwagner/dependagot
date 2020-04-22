@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/github/dependabot/go/cli/runner"
 	"github.com/spf13/cobra"
+	"github.com/thepwagner/dependagot/go/cli/runner"
 )
 
 // listCmd represents the list command

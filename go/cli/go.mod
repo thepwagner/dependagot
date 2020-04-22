@@ -1,8 +1,8 @@
-module github.com/github/dependabot/go/cli
+module github.com/thepwagner/dependagot/go/cli
 
 go 1.14
 
-replace github.com/github/dependabot/go/common => ../common
+replace github.com/thepwagner/dependagot/go/common => ../common
 
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
@@ -10,7 +10,7 @@ require (
 	github.com/docker/docker v1.13.1
 	github.com/docker/go-connections v0.4.0
 	github.com/docker/go-units v0.4.0 // indirect
-	github.com/github/dependabot/go/common v1.0.0
+	github.com/thepwagner/dependagot/go/common v1.0.0
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect

@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/github/dependabot/go/common/dependabot/v1"
-	"github.com/github/dependabot/go/modules/service"
 	"github.com/sirupsen/logrus"
+	"github.com/thepwagner/dependagot/go/common/dependagot/v1"
+	"github.com/thepwagner/dependagot/go/modules/service"
 	"github.com/twitchtv/twirp"
 )
 
@@ -30,7 +30,7 @@ func main() {
 	}
 
 	updater := service.NewUpdate()
-	handler := dependabot_v1.NewUpdateServiceServer(updater, &twirp.ServerHooks{
+	handler := dependagot_v1.NewUpdateServiceServer(updater, &twirp.ServerHooks{
 		RequestRouted: func(ctx context.Context) (context.Context, error) {
 			twirpFields(ctx).Debug("Starting API request")
 			return ctx, nil

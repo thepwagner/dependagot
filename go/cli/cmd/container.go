@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/github/dependabot/go/cli/loaders"
-	"github.com/github/dependabot/go/cli/modules"
-	"github.com/github/dependabot/go/cli/runner"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/thepwagner/dependagot/go/cli/loaders"
+	"github.com/thepwagner/dependagot/go/cli/modules"
+	"github.com/thepwagner/dependagot/go/cli/runner"
 )
 
 func LoadingUpdaterCommand(containerCmd func(context.Context, *cobra.Command, *runner.LoadingUpdater) error) func(cmd *cobra.Command, _ []string) error {

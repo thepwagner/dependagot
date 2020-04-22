@@ -6,14 +6,14 @@ import (
 	"path/filepath"
 	"testing"
 
-	dependabot_v1 "github.com/github/dependabot/go/common/dependabot/v1"
-	"github.com/github/dependabot/go/modules/modules"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/thepwagner/dependagot/go/common/dependagot/v1"
+	"github.com/thepwagner/dependagot/go/modules/modules"
 )
 
 func TestSandbox_Dependencies(t *testing.T) {
-	m := modules.NewModules(fixture(t, "testify151.mod"), "")
+	m := modules.NewModules(fixture(t, "testify151.mod"), "", nil)
 
 	deps, err := m.Dependencies()
 	require.NoError(t, err)
@@ -28,9 +28,10 @@ func TestSandbox_Upgrade(t *testing.T) {
 	m := modules.NewModules(
 		fixture(t, "testify150.mod"),
 		fixture(t, "testify150.sum"),
+		nil,
 	)
 
-	files, err := m.DependencyVersion(&dependabot_v1.Dependency{
+	files, err := m.DependencyVersion(&dependagot_v1.Dependency{
 		Package: "github.com/stretchr/testify",
 		Version: "v1.5.1",
 	})
