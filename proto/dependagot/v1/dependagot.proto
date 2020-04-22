@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package dependabot.v1;
+package dependagot.v1;
 
 message Dependency {
   string package = 1;
@@ -31,7 +31,7 @@ message UpdateDependenciesResponse {
 
 service UpdateService {
   // Files uploads data and returns a list of paths of interest
-  // Clients should loop until required_paths is empty, 
+  // Clients should loop until required_paths is empty,
   // and fail if required_paths can't be loaded.
   rpc Files(FilesRequest) returns (FilesResponse);
 
