@@ -4,7 +4,7 @@ RUN mkdir /app
 COPY common /app/common
 
 WORKDIR /app/bundler
-COPY bundler/Gemfile bundler/Gemfile.lock bundler/dependabot-ruby-bundler.gemspec /app/bundler/
+COPY bundler/Gemfile bundler/Gemfile.lock bundler/dependagot-ruby-bundler.gemspec /app/bundler/
 RUN bundle install --without development test
 
 COPY bundler /app/bundler/

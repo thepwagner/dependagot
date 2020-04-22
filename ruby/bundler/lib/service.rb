@@ -1,4 +1,4 @@
-require 'dependabot-ruby-common'
+require 'dependagot-ruby-common'
 
 class UpdateServiceHandler
 
@@ -16,19 +16,19 @@ class UpdateServiceHandler
       optional_paths.push("Gemfile.lock")
     end
 
-    ::Dependabot::V1::FilesResponse.new(
+    ::Dependagot::V1::FilesResponse.new(
       optional_paths: optional_paths,
     )
   end
 
   def list_dependencies(req, _call) 
-    ::Dependabot::V1::ListDependenciesResponse.new(
+    ::Dependagot::V1::ListDependenciesResponse.new(
       dependencies: [],
     )
   end
 
   def update_dependencies(req, _call) 
-    ::Dependabot::V1::UpdateDependenciesResponse.new(
+    ::Dependagot::V1::UpdateDependenciesResponse.new(
       new_files: Hash.new,
     )
   end
