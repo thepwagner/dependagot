@@ -5,6 +5,6 @@ extern crate prost;
 extern crate prost_derive;
 
 mod service {
-  include!(concat!(env!("OUT_DIR"), "/dependabot.v1.rs"));
+  include!(concat!(env!("OUT_DIR"), "/dependagot.v1.rs"));
 }
 pub use service::*;

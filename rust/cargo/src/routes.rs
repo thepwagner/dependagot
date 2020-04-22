@@ -7,21 +7,21 @@ pub fn new(state: State) -> impl Filter<Extract = impl Reply, Error = Rejection>
     warp::path::end()
         .map(handlers::index)
         .or(
-            warp::path!("twirp" / "dependabot.v1.UpdateService" / "Files")
+            warp::path!("twirp" / "dependagot.v1.UpdateService" / "Files")
                 .and(warp::post())
                 .and(warp_protobuf::body::protobuf())
                 .and(with_state(state.clone()))
                 .and_then(handlers::files),
         )
         .or(
-            warp::path!("twirp" / "dependabot.v1.UpdateService" / "ListDependencies")
+            warp::path!("twirp" / "dependagot.v1.UpdateService" / "ListDependencies")
                 .and(warp::post())
                 .and(warp_protobuf::body::protobuf())
                 .and(with_state(state.clone()))
                 .and_then(handlers::list_dependencies),
         )
         .or(
-            warp::path!("twirp" / "dependabot.v1.UpdateService" / "UpdateDependencies")
+            warp::path!("twirp" / "dependagot.v1.UpdateService" / "UpdateDependencies")
                 .and(warp::post())
                 .and(warp_protobuf::body::protobuf())
                 .and(with_state(state))

@@ -10,6 +10,7 @@ task build(type: Exec) {
   inputs.files fileTree(dir: rustDir, include: '**/Cargo.lock')
   inputs.files fileTree(dir: rustDir, include: '**/src/*.rs')
 
+  // Super-gnarly, but copy .proto files into the docker build context:
   doFirst {
     def srcDir = file("${projectDir}/src")
     copy {
